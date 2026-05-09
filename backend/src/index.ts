@@ -18,8 +18,15 @@ const PORT = process.env.PORT || 3001;
 
 // Security Middleware
 app.use(helmet());
+
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'http://localhost:3000',
+    'http://localhost:3001'
+].filter(Boolean) as string[];
+
 app.use(cors_pkg({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   credentials: true
 }));
 

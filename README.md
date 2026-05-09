@@ -68,5 +68,8 @@ Allowee is a comprehensive financial platform designed specifically for the uniq
 4. **Access the App**
    Open `http://localhost:3000`. Default demo PIN is `1234`.
 
+## 🌐 Free Deployment
+For instructions on how to deploy this app for free (Vercel + Render + Neon), see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## 📄 License
 This project is licensed under the ISC License. Built with ❤️ for the Nigerian student community.
