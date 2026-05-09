@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  password       String
+  name           String
+  role          Role      @default(STUDENT)
+  universityId   String?
+  university     University? @relation(fields: [universityId], references: [id])
+  currency       String    @default("NGN")
+  pinHash        String?
+  transactions   Transaction[]
+  budgets       Budget[]
+  sharedPlans    SharedPlan[]
+  upvotes        Upvote[]
+  splits         SplitMember[]
+  deletedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+enum Role {
+  STUDENT
+  MERCHANT
+  ADMIN
+}
+
+model University {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  users     User[]
+  merchants Merchant[]
+  items     Item[]
+}
+
+model Merchant {
+  id            String   @id @default(cuid())
+  name          String
+  universityId  String
+  university    University @relation(fields: [universityId], references: [id])
+  items         Item[]
+  userId        String?
+}
+
+model Item {
+  id            String   @id @default(cuid())
+  name          String
+  price         Decimal  @db.Decimal(20, 2)
+  category      String
+  universityId  String
+  university    University @relation(fields: [universityId], references: [id])
+  merchantId    String
+  merchant      Merchant   @relation(fields: [merchantId], references: [id])
+  deletedAt     DateTime?
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  amount          Decimal  @db.Decimal(20, 2)
+  currency        String   @default("NGN")
+  exchangeRate    Decimal? @db.Decimal(20, 6)
+  type            String
+  category        String
+  description     String?
+  date            DateTime @default(now())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  externalId      String?  @unique
+  splitId         String?
+  split           Split?    @relation(fields: [splitId], references: [id])
+  deletedAt       DateTime?
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  amount      Decimal  @db.Decimal(20, 2)
+  period      String
+  tier        String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  deletedAt   DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model Split {
+  id           String        @id @default(cuid())
+  totalAmount  Decimal       @db.Decimal(20, 2)
+  description  String
+  members      SplitMember[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+}
+
+model SplitMember {
+  id       String  @id @default(cuid())
+  splitId  String
+  split    Split   @relation(fields: [splitId], references: [id])
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  share    Decimal @db.Decimal(20, 2)
+  paid     Boolean @default(false)
+}
+
+model SharedPlan {
+  id          String   @id @default(cuid())
+  title       String
+  content     Json
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  upvotes     Upvote[]
+  createdAt   DateTime @default(now())
+}
+
+model Upvote {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  sharedPlanId String
+  sharedPlan   SharedPlan @relation(fields: [sharedPlanId], references: [id])
+  @@unique([userId, sharedPlanId])
+}
