@@ -58,6 +58,7 @@ model Item {
   university    University @relation(fields: [universityId], references: [id])
   merchantId    String
   merchant      Merchant   @relation(fields: [merchantId], references: [id])
+  imageUrl      String?
   deletedAt     DateTime?
 }
 

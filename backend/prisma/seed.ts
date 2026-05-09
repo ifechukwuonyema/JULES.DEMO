@@ -26,6 +26,14 @@ async function main() {
     'Baze University',
   ];
 
+  const MOCK_PHOTOS = {
+    "Cafeteria": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400",
+    "Bookstore": "https://images.unsplash.com/photo-1544640808-32ca72ac7f37?auto=format&fit=crop&q=80&w=400",
+    "Fashion": "https://images.unsplash.com/photo-1523381235312-da59b932166a?auto=format&fit=crop&q=80&w=400",
+    "General": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&q=80&w=400",
+    "Hair": "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=400",
+  };
+
   for (const name of universities) {
     const uni = await prisma.university.upsert({
       where: { name },
@@ -35,28 +43,26 @@ async function main() {
 
     const merchant = await prisma.merchant.create({
       data: {
-        name: `${name} Cafeteria`,
+        name: `${name} Marketplace`,
         universityId: uni.id,
       },
     });
 
-    // Seed student-centric categories
-    const categories = [
-      { name: "Ramen-tier Groceries", price: 200 },
-      { name: "Standard Jollof", price: 800 },
-      { name: "Engineering Textbook (Used)", price: 4500 },
-      { name: "Lab Manual", price: 1200 },
-      { name: "Quick Haircut", price: 500 },
-      { name: "Barbershop Special", price: 2500 },
-      { name: "thrifted T-Shirt", price: 1500 },
+    const items = [
+      { name: "Salo Jollof Rice", price: 1200, category: "Cafeteria", img: MOCK_PHOTOS.Cafeteria },
+      { name: "Engineering Lab Manual", price: 2500, category: "Bookstore", img: MOCK_PHOTOS.Bookstore },
+      { name: "Vintage Uni Hoodie", price: 8500, category: "Fashion", img: MOCK_PHOTOS.Fashion },
+      { name: "Campus Fade Haircut", price: 1500, category: "Hair and Beauty", img: MOCK_PHOTOS.Hair },
+      { name: "Indomie Survival Pack", price: 500, category: "Cafeteria", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=400" },
     ];
 
-    for (const cat of categories) {
+    for (const item of items) {
       await prisma.item.create({
         data: {
-          name: cat.name,
-          price: new Decimal(cat.price),
-          category: cat.name.includes("Rice") || cat.name.includes("Jollof") ? "Cafeteria" : "General",
+          name: item.name,
+          price: new Decimal(item.price),
+          category: item.category,
+          imageUrl: item.img,
           universityId: uni.id,
           merchantId: merchant.id,
         },
@@ -64,7 +70,7 @@ async function main() {
     }
   }
 
-  console.log('Seeding completed with Decimal precision.');
+  console.log('Seeding completed with mock photos.');
 }
 
 main()

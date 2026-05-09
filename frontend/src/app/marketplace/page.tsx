@@ -13,10 +13,38 @@ const SCHOOLS = [
 ];
 
 const ITEMS = [
-  { name: 'Korede Spaghetti', price: '₦1,500', cat: 'Cafeteria', shop: 'Cafeteria 1', uni: 'UNILAG' },
-  { name: 'Engineering Textbook', price: '₦8,500', cat: 'Bookstore', shop: 'Main Library', uni: 'UNILAG' },
-  { name: 'Low Cut + Dye', price: '₦3,000', cat: 'Hair and Beauty', shop: 'Campus Saloon', uni: 'Covenant' },
-  { name: 'Allowee T-Shirt', price: '₦6,000', cat: 'Fashion', shop: 'Student Union Mall', uni: 'ABUAD' },
+  {
+    name: 'Korede Spaghetti',
+    price: '₦1,500',
+    cat: 'Cafeteria',
+    shop: 'Cafeteria 1',
+    uni: 'UNILAG',
+    img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    name: 'Engineering Textbook',
+    price: '₦8,500',
+    cat: 'Bookstore',
+    shop: 'Main Library',
+    uni: 'UNILAG',
+    img: 'https://images.unsplash.com/photo-1544640808-32ca72ac7f37?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    name: 'Low Cut + Dye',
+    price: '₦3,000',
+    cat: 'Hair and Beauty',
+    shop: 'Campus Saloon',
+    uni: 'Covenant',
+    img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    name: 'Allowee T-Shirt',
+    price: '₦6,000',
+    cat: 'Fashion',
+    shop: 'Student Union Mall',
+    uni: 'ABUAD',
+    img: 'https://images.unsplash.com/photo-1523381235312-da59b932166a?auto=format&fit=crop&q=80&w=400'
+  },
 ];
 
 const Marketplace = () => {
@@ -56,12 +84,18 @@ const Marketplace = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {ITEMS.filter(i => i.uni.includes(selectedUni.split('(')[0].trim()) || i.uni === selectedUni).map((item, idx) => (
-          <Card key={idx} className="hover:shadow-md transition-shadow cursor-pointer">
-            <div className="h-40 bg-gray-100 flex items-center justify-center text-gray-400">
-               {item.cat === 'Cafeteria' && <Coffee size={40} />}
-               {item.cat === 'Bookstore' && <BookOpen size={40} />}
-               {item.cat === 'Hair and Beauty' && <Scissors size={40} />}
-               {item.cat === 'Fashion' && <ShoppingBag size={40} />}
+          <Card key={idx} className="hover:shadow-md transition-shadow cursor-pointer group">
+            <div className="h-40 bg-gray-100 relative overflow-hidden">
+               {item.img ? (
+                   <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+               ) : (
+                   <div className="flex items-center justify-center h-full text-gray-400">
+                       {item.cat === 'Cafeteria' && <Coffee size={40} />}
+                       {item.cat === 'Bookstore' && <BookOpen size={40} />}
+                       {item.cat === 'Hair and Beauty' && <Scissors size={40} />}
+                       {item.cat === 'Fashion' && <ShoppingBag size={40} />}
+                   </div>
+               )}
             </div>
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-1">
